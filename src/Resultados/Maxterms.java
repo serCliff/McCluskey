@@ -1,13 +1,13 @@
 package Resultados;
 
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
 import Comun.FuncionesComunes;
 
-public class Minterms extends Thread {
+public class Maxterms extends Thread {
+
 
 	private static HashMap<String, String[]> datos;
 	private static HashMap<String, String[]> datosNONI;
@@ -18,9 +18,10 @@ public class Minterms extends Thread {
 	private static int debug;
 	
 	
-	public Minterms(int debug) {
+	public Maxterms(int debug) {
 		this.debug = debug;
 	}
+	
 	
 	public void run(){
 		HashMap<String, String[]> datos_iniciales = new HashMap<>();
@@ -31,17 +32,21 @@ public class Minterms extends Thread {
 		String[] terminos;
 		String[] terminosNONI;
 		
+//		FuncionesComunes.titular();
 		System.out.println("\n");
 		
-		String funcion = FuncionesComunes.pedirFuncionMinterms();
-		String funcionNoNi = FuncionesComunes.pedirTerminosNONI();
 		
-		terminos = FuncionesComunes.obtenerTerminos(funcion).clone();
+		String funcion = FuncionesComunes.pedirFuncionMaxterms();
+		String funcionNoNi = FuncionesComunes.pedirTerminosNONImaxterms();
+		
+		terminos = FuncionesComunes.obtenerTerminos(funcion).clone(); //devuelve el numero de términos que tiene ej: F(A,B,C) => terminos[] = [A, B, C]
 		num_terminos = terminos.length;
-		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinarios(funcion, 0);
+
+		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinariosMaxterms(funcion, 0);
 		
 		if (!funcionNoNi.isEmpty()) { //Si hay datosNONI los añado a datos
-			datosNONI = FuncionesComunes.establecerBinariosNONI(funcion, funcionNoNi, 0);
+			datosNONI = FuncionesComunes.establecerBinariosNONImaxterms
+					(funcion, funcionNoNi, 0);
 			
 			for (Entry<String, String[]> quitar_de_noni : datos.entrySet()) { //Evitamos confundir noni iguales que los normales
 				if (datosNONI.containsKey(quitar_de_noni.getKey())) {
@@ -73,9 +78,7 @@ public class Minterms extends Thread {
 		FuncionesComunes.mostrarValores(valores);
 		FuncionesComunes.mostrarTablaPrimerosImplicantes(datos_iniciales, datosNONI, resultado);
 		FuncionesComunes.imprimirResultados(terminos, datos, resultado);
-
 	}
 	
 	
-
 }

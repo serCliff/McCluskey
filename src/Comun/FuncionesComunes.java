@@ -2,21 +2,57 @@ package Comun;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Map.Entry;
+
+import org.w3c.dom.css.ElementCSSInlineStyle;
 
 public class FuncionesComunes {
 	
 	
-	public static void titular() {
+	public static String titular() {
 		
 		System.out.println(" __  __           ____ _           _              \n"
 						  +"|  \\/  | ___     / ___| |_   _ ___| | _____ _   _ \n"
 						  +"| |\\/| |/ __|   | |   | | | | / __| |/ / _ \\ | | |\n"
 						  +"| |  | | (__    | |___| | |_| \\__ \\   <  __/ |_| |\n"
 						  +"|_|  |_|\\___|    \\____|_|\\__,_|___/_|\\_\\___|\\__, |\n"
-						  +"                                            |___/ \n");
+						  +"                                            |___/ ");
+	
+		System.out.print("\nElegir modo de introducción de la función:\n1) MAXTERMS\n2) MINTERMS\n=> ");
+
+		String return_value = "";
+		do {
+			
+			return_value = new Scanner(System.in).nextLine();
+			
+			if (return_value.isEmpty()) {
+				return_value = "2";
+			}
+			return_value = return_value.toLowerCase();
+			if (return_value.equals("maxterms") || return_value.equals("1")) {
+				return_value = "1";
+			} else if (return_value.equals("minterms") || return_value.equals("2")) {
+				return_value = "2";
+			} else {
+				System.out.println("Error al introducir el texto, recuerda:\n1) MAXTERMS\n2) MINTERMS\n=> ");
+				return_value = "0";
+			}
+						
+		} while (!return_value.equals("1") && !return_value.equals("2"));
+		
+		if (return_value.equals("1")) {
+			System.out.println("\nMAXTERMS");
+		}else {
+			System.out.println("\nMINTERMS");
+		}
+		
+		
+		return return_value;
+		
 	}
 	
 	
@@ -34,15 +70,11 @@ public class FuncionesComunes {
 		return funcion;
 
 	}
-	
-	
-	
-	
 	public static String[] obtenerTerminos(String funcion) {
 
 		String[] values = null;
 		
-		funcion = funcion.replaceAll("\\s+","");
+		funcion = funcion.replaceAll("\\s+",""); // borra espacios en blanco
 		funcion = funcion.toLowerCase();
 		
 		String temp = funcion.split("\\(")[1];
@@ -53,15 +85,32 @@ public class FuncionesComunes {
 
 	}
 	
+	public static String pedirFuncionMaxterms() {
+		System.out.print("Introduce la funcion a evaluar [f(A,B,C,D,E) = (a + B + C)(A + d + e)(A + B + C + d)]: ");
+
+		String funcion = "";
+
+		funcion = new Scanner(System.in).nextLine();
+		
+		if (funcion.isEmpty()) {
+			funcion = "f(A,B,C,D,E) = (a + B + C)(A + d + e)(A + B + C + d)";
+		}
+		
+		return funcion;
+
+	}
+	
+	
+	
 	public static HashMap<String, String[]> establecerBinarios(String funcion, int debug) {
 		
 		HashMap<String, String[]> resultados = new HashMap<String, String[]>();
 		
 		String[] terminos = FuncionesComunes.obtenerTerminos(funcion);
-		funcion = funcion.replaceAll("\\s+","");
+		funcion = funcion.replaceAll("\\s+",""); // borra espacios en blanco
 		String f_minterms = funcion.split("=")[1];
 		String[] minterms = f_minterms.split("\\+");
-				
+		
 		
 		for (int i = 0; i < minterms.length; i++) {
 			
@@ -75,6 +124,63 @@ public class FuncionesComunes {
 				}else{
 					valSplited[j] = "0";
 					new_val=new_val+"0";
+				}
+			}
+			
+			String binario = ""+Integer.parseInt(new_val, 2);
+			resultados.put(binario, valSplited);
+			
+		}
+		
+		if (debug == 0) {
+			System.out.println("\nTÉRMINOS UTILIZADOS");
+			for(Entry<String, String[]> entry : resultados.entrySet()) {
+			    String key = entry.getKey();
+			    String[] value = entry.getValue();
+
+			    System.out.println("Valor: "+key+"\t=>\t"+Arrays.toString(value));
+			}
+		}
+		if (debug == 2) {
+			System.out.println("\nTÉRMINOS NONI");
+			for(Entry<String, String[]> entry : resultados.entrySet()) {
+			    String key = entry.getKey();
+			    String[] value = entry.getValue();
+
+			    System.out.println("Valor: "+key+"\t=>\t"+Arrays.toString(value));
+			}
+		}
+		
+		return resultados;
+	}
+	
+	
+
+	
+	public static HashMap<String, String[]> establecerBinariosMaxterms(String funcion, int debug) {
+		
+		HashMap<String, String[]> resultados = new HashMap<String, String[]>();
+		
+		String[] terminos = FuncionesComunes.obtenerTerminos(funcion);
+		funcion = funcion.replaceAll("\\s+",""); // borra espacios en blanco
+		String f_minterms = funcion.split("=")[1];
+		f_minterms = f_minterms.replaceAll("\\(", "");
+		f_minterms = f_minterms.replaceAll("\\+", "");
+		String[] minterms = f_minterms.split("\\)");
+				
+		
+		for (int i = 0; i < minterms.length; i++) {
+			
+			String new_val = "";
+			String[] valSplited = new String[terminos.length];
+			for (int j = 0; j < terminos.length; j++) {
+				
+				if (minterms[i].indexOf(terminos[j]) != -1 ) {
+					valSplited[j] = "0";
+					new_val=new_val+"0";
+				}else{
+					valSplited[j] = "1";
+					new_val=new_val+"1";
 				}
 			}
 			
@@ -178,15 +284,113 @@ public static String pedirTerminosNONI() {
 		
 		return terminosNoNi;
 	}
+
+
+
+public static String pedirTerminosNONImaxterms() {
+		
+		String terminosNoNi = "";
+		
+		System.out.print("\n¿Desea introducir términos NO/NI? [Y/n]: ");
+		
+		terminosNoNi = new Scanner(System.in).nextLine();
+
+		ArrayList<String> terminosNONI = new ArrayList<>();
+
+		if (terminosNoNi.isEmpty()) {
+			terminosNoNi = "Y";
+		}
+		
+		if (terminosNoNi.toUpperCase().equals("N")) {
+			terminosNoNi = "N";
+		} else if (terminosNoNi.toUpperCase().equals("Y")) {
+			System.out.print("Introduce el primer témino NO/NI [(a + B + d)]: ");
+			
+			terminosNoNi = new Scanner(System.in).nextLine();
+			if (terminosNoNi.isEmpty()) {
+				terminosNoNi = "(a + B + d)";
+			}
+
+			terminosNONI.add(terminosNoNi);
+			
+			terminosNoNi = "Y";
+		}
+		
+		
+		while (terminosNoNi.compareTo("N") != 0){
+			System.out.print("\n¿Desea introducir más términos NO/NI? [y/N]: ");
+
+			terminosNoNi = new Scanner(System.in).nextLine();
+
+
+
+			if (terminosNoNi.isEmpty()) {
+				terminosNoNi = "N";
+			}else {
+				if (terminosNoNi.toUpperCase().equals("N")) {
+					terminosNoNi = "N";
+				} else if (terminosNoNi.toUpperCase().equals("Y")) {
+					System.out.print("Introduce el siguiente témino NO/NI [(B + C + d)]: ");
+
+					
+					terminosNoNi = new Scanner(System.in).nextLine();
+					
+					if (terminosNoNi.isEmpty()) {
+						terminosNoNi = "(B + C + d)";
+					}
+
+					terminosNONI.add(terminosNoNi);
+					
+					terminosNoNi = "Y";
+				}
+				
+			}
+		}
+		
+		terminosNoNi = "";
+		for (String elem : terminosNONI) {
+			if (terminosNoNi.compareTo("") == 0) {
+				terminosNoNi = elem;
+			}else {
+				terminosNoNi= terminosNoNi+elem;
+			}
+		}
+		
+		return terminosNoNi;
+	}
+
+
+
 	
-	public static HashMap<String, String[]>  establecerBinariosNONI(String funcion, String terminosNoNi) {
+	public static HashMap<String, String[]>  establecerBinariosNONI(String funcion, String terminosNoNi, int debug) {
 		
 		String[] temp_funcion = funcion.split("=");
 			
-		return FuncionesComunes.establecerBinarios(temp_funcion[0]+"="+terminosNoNi, 2);
+		if (debug==0) {
+			return FuncionesComunes.establecerBinarios(temp_funcion[0]+"="+terminosNoNi, 2);
+		} else {
+			return FuncionesComunes.establecerBinarios(temp_funcion[0]+"="+terminosNoNi, 0);
+		}
+		
+		
 
 	}
+
+
 	
+	public static HashMap<String, String[]>  establecerBinariosNONImaxterms(String funcion, String terminosNoNi, int debug) {
+		
+		String[] temp_funcion = funcion.split("=");
+			
+		if (debug==0) {
+			return FuncionesComunes.establecerBinariosMaxterms(temp_funcion[0]+"="+terminosNoNi, 2);
+		} else {
+			return FuncionesComunes.establecerBinariosMaxterms(temp_funcion[0]+"="+terminosNoNi, 0);
+		}
+		
+		
+
+	}
 	
 	
 	
@@ -559,7 +763,10 @@ public static HashMap<String, String[]> eliminarDuplicados(HashMap<String, Strin
 
 
 
-public static ArrayList<String> primerosImplicantes(HashMap<String, String[]> datos_iniciales, HashMap<String, String[]> datos_noni, HashMap<String, String[]> utilizados, int debug) {
+public static ArrayList<String> primerosImplicantes(HashMap<String, String[]> datos_iniciales, 
+														 HashMap<String, String[]> datos_noni,
+														 HashMap<String, String[]> utilizados,
+														 							int debug) {
 	
 	
 	HashMap<String, ArrayList<String>> implicantes = new HashMap<>();
@@ -619,20 +826,20 @@ public static ArrayList<String> primerosImplicantes(HashMap<String, String[]> da
 	
 	
 	//Comprobar obligatorios y crear hashmmap que cubra todo
-	//TODO: Comprobar NO/NI
+	
 	
 	if (debug == 0) {
 		System.out.println("\nCOMPROBAMOS TABLA DE IMPLICANTES");
 	}
 
-	
+	boolean es_noni;
 	for (Entry<String, ArrayList<String>> tabla_implicantes : implicantes.entrySet()) {
 		if (debug==0) {
 			System.out.println(tabla_implicantes.getKey() + " -> " + tabla_implicantes.getValue());
 		}
 		
 		
-		boolean es_noni = false;
+		es_noni = false;
 		if (!datos_noni.isEmpty()) { //Evitamos los terminos NONI de los imprescindibles
 			for (Entry<String, String[]> termino_noni : datos_noni.entrySet()) { //por cada noni
 				for (String implicante : tabla_implicantes.getValue()) { //Miramos que no esté entre los implicantes
@@ -658,15 +865,15 @@ public static ArrayList<String> primerosImplicantes(HashMap<String, String[]> da
 		
 		
 		if (!es_noni) {
-			if (tabla_implicantes.getValue().size() == 1) {
+			if (tabla_implicantes.getValue().size() == 1) { //Si solo podemos obtenerlo con este término va a obligatorios
 				if (!obligatorios.contains(tabla_implicantes.getValue().get(0))) {
 					obligatorios.add(tabla_implicantes.getValue().get(0));
 				}
 			}
 		}
 		
-		//TODO: Revisar esta parte y mirar a ver que pasa con los valores que no logra incluir pero son necesarios
-		if (!obligatorios.contains(tabla_implicantes.getValue().get(0))) {
+		
+		if (!obligatorios.contains(tabla_implicantes.getValue().get(0))) { //Si no está en obligatorios irá a posibles
 			
 			int temp_index = 0;
 			String posible = tabla_implicantes.getValue().get(temp_index);
@@ -674,26 +881,45 @@ public static ArrayList<String> primerosImplicantes(HashMap<String, String[]> da
 				posibles.add(posible);
 			} else {
 				
-				while (!posibles.contains(posible) && temp_index <= tabla_implicantes.getValue().size()) {
-					temp_index++;
+				
+				while (posibles.contains(posible) && temp_index < tabla_implicantes.getValue().size()) {
 					posible = tabla_implicantes.getValue().get(temp_index);
-					System.out.println(temp_index +" != "+ tabla_implicantes.getValue().size());
+					es_noni=false;
+					
+					for (Entry<String, String[]> termino_noni : datos_noni.entrySet()) { //Comprobamos que no sea noni y no podamos tomar descartando el noni
+						
+						String[] implicante_splited;
+						if (posible.split(",").length > 1) {
+							implicante_splited = posible.split(",");
+						}else {
+							implicante_splited = new String[1];
+							implicante_splited[0] = posible;
+						}
+						
+						for (String implicante_es_noni : implicante_splited) { //Dividimos un implicante en espacios para comprobarlo correctamente
+							if (implicante_es_noni.equals(termino_noni.getKey())) { //Si está entre los noni lo descartamos como obligatorio
+								es_noni = true;
+							}
+						}
+					}
+					
+					if (!posibles.contains(posible) && !es_noni) {
+						posibles.add(posible);
+					}
+					temp_index++;
 				}
-				
-				if (temp_index <= tabla_implicantes.getValue().size()) {
-					posibles.add(posible);
-				}
-				
-			}
-			
+			}	
 		} 
-		
 	}
 	
-	System.out.println("\nPOSIBLES");
-	for (String temp : posibles) {
-		System.out.println(temp);
+	if (debug == 0) {
+		System.out.println("\nPOSIBLES");
+		for (String temp : posibles) {
+			System.out.println(temp);
+		}
 	}
+	
+	
 	
 	//Establecemos un conjunto de minterms obligatorios (son los unicos que unifican con el termino a elegir) para luego añadir individualmente los posibles
 	ArrayList<String> check_final = new ArrayList<>();
@@ -706,24 +932,25 @@ public static ArrayList<String> primerosImplicantes(HashMap<String, String[]> da
 		}
 		String[] temp_vl = vl.split(",");
 		for (String temp_vl_splited : temp_vl) {
-			if (!check_final.contains(temp_vl_splited)) {
+			if (!check_final.contains(temp_vl_splited)) { //Meto por separado cada uno de los elementos de manera univoca para compararlos con los terminos que hay que conseguir
 				check_final.add(temp_vl_splited);
 			}
 		}			
 	}
 	
 	
+	
 	//añadimos los posibles que acaban de cubrir toda la tabla de implicantes
-	//TODO: Utilizar terminos noni si es necesario
 	for (Entry<String, String[]> final_set : datos_iniciales.entrySet()) {
 		
-		if (!check_final.contains(final_set.getKey())) {
+		if (!check_final.contains(final_set.getKey())) { //En este set está cada uno de los términos cogidos por un termino obligatorio, si aún no está incluido, seleccionar el mejor candidato
 			
-			for (String seleccion_posibles : posibles) {
+			for (String seleccion_posibles : posibles) { // de cada posible
 				String[] temp_seleccion_posibles = seleccion_posibles.split(",");
 				
 				for (String temp_seleccion_posibles_splitted : temp_seleccion_posibles) {
-					if (final_set.getKey().compareTo(temp_seleccion_posibles_splitted) == 0) {
+										
+					if (final_set.getKey().compareTo(temp_seleccion_posibles_splitted) == 0) { //comparamos con los obligatorios y lo añadimos o no
 						if (!obligatorios.contains(seleccion_posibles)) {
 							obligatorios.add(seleccion_posibles);
 						}
@@ -732,6 +959,101 @@ public static ArrayList<String> primerosImplicantes(HashMap<String, String[]> da
 				}
 			}
 		}		
+	}
+	
+	
+	
+	if (debug==0) {
+		System.out.println("\nDESCARTAMOS LOS NONI SI FUERA NECESARIO");
+	}
+	
+	
+	ArrayList<String> noni_obligatorio = new ArrayList<>();
+	ArrayList<String> termino_para_eliminar = new ArrayList<>();
+	boolean existe = false;
+
+	
+	for (String obligatorio : obligatorios) {
+		
+		if (debug==0) {
+			System.out.println("Comprobamos: " + obligatorio);
+		}
+		if (!termino_para_eliminar.contains(obligatorio)) {
+			
+			
+			String[] obligatorio_splitted;
+			if (obligatorio.length() > 2 ) {
+				obligatorio_splitted = obligatorio.split(",");
+			} else {
+				obligatorio_splitted = new String[1];
+				obligatorio_splitted[0] = obligatorio;
+			}
+			
+			
+			es_noni = false;
+			for (String checking : obligatorio_splitted) {
+				for (Entry<String, String[]> noni : datos_noni.entrySet()) {
+					if (checking.equals(noni.getKey())) {
+						es_noni = true;
+					}
+				}
+			}
+			
+			if (es_noni) {//Si el elemento de estudio tiene un noni comprobamos que no sea imprescindible y lo quitamos
+				
+				for (String algun_elemento_con_noni : obligatorio_splitted) {
+					
+					if (!datos_noni.containsKey(algun_elemento_con_noni)) {
+						existe = false;
+						for (String obligatorio_descartar : obligatorios) {
+							if (!obligatorio_descartar.equals(obligatorio) && !termino_para_eliminar.contains(obligatorio_descartar)) {
+								String[] obligatorio_descartar_splitted = obligatorio_descartar.split(",");
+								for (String final_check : obligatorio_descartar_splitted) {
+									if (debug==0) {
+										System.out.println(algun_elemento_con_noni + " == " +final_check );
+									}
+									if (final_check.equals(algun_elemento_con_noni)) {
+										existe = true; //Sera veradero si otro termino cubre 
+									}
+								}
+							}
+							
+						}
+						if (debug==0) {
+							System.out.println("Existe: "+existe);
+						}
+						//Si nadie contiene alguno de sus elemento a pesar de tener un noni es obligatorio
+						if (!existe) {
+							noni_obligatorio.add(obligatorio);
+						} else{ //quitamos los que no son imprescindibles
+							termino_para_eliminar.add(obligatorio);
+						}
+						
+					}
+				}
+			}
+		}
+	}
+	
+	
+	for (String evitar : termino_para_eliminar) {
+		
+		if (obligatorios.contains(evitar)) {
+			if (debug==0) {
+				System.out.println("Eliminamos: " + evitar);
+			}
+			obligatorios.remove(evitar);
+		}
+	}
+	
+	
+	for (String noni : noni_obligatorio) {
+		if (!obligatorios.contains(noni)) {
+			if (debug==0) {
+				System.out.println("Añadimos: " + noni);
+			}
+			obligatorios.add(noni);
+		}
 	}
 	
 	
@@ -749,8 +1071,9 @@ public static ArrayList<String> primerosImplicantes(HashMap<String, String[]> da
 	
 }
 
-public static void mostrarTablaPrimerosImplicantes(HashMap<String, String[]> datos_iniciales,
-																 ArrayList<String> resultado) {
+public static <T> void mostrarTablaPrimerosImplicantes(HashMap<String, String[]> datos_iniciales,
+		 													HashMap<String, String[]> datos_noni,
+																     ArrayList<String> resultado) {
 
 	System.out.println("\nTABLA PRIMEROS IMPLICANTES");
 
@@ -765,10 +1088,124 @@ public static void mostrarTablaPrimerosImplicantes(HashMap<String, String[]> dat
 		System.out.print("\t");
 	}
 
-	for (Entry<String, String[]> iniciales : datos_iniciales.entrySet()) {
-		System.out.print("\t" + iniciales.getKey());
-	}
+//	
+//	for (Entry<String, String[]> iniciales : datos_iniciales.entrySet()) {
+//		System.out.print("\t" + iniciales.getKey());
+//	}
 
+	int mostrados = 0;
+	for (int i = 0; mostrados < datos_iniciales.size(); i++) {
+		if (datos_iniciales.containsKey(Integer.toString(i))) {
+			if (!datos_noni.containsKey(Integer.toString(i))) {
+				System.out.print("\t" + i);
+			}
+			mostrados++;
+		}
+	}
+	
+	if (!datos_noni.isEmpty()) {
+		System.out.print("\t" + "|");
+		 mostrados = 0;
+		for (int i = 0; mostrados < datos_iniciales.size(); i++) {
+			if (datos_iniciales.containsKey(Integer.toString(i))) {
+				if (datos_noni.containsKey(Integer.toString(i))) {
+					System.out.print("\t" + i);
+				}
+				mostrados++;
+			}
+		}
+		
+		
+	}
+		
+		
+	
+	
+	
+	
+	for (String implicante : resultado) {
+
+		System.out.print("\n" + implicante + "\t");
+		mostrados = 0;
+		for (int i = 0; mostrados < datos_iniciales.size(); i++) {
+			
+			if (datos_iniciales.containsKey(Integer.toString(i))) {
+				if (!datos_noni.containsKey(Integer.toString(i))) {
+					
+					String[] todos = implicante.split(",");					
+					if (todos.length > 1) {
+						int escrito = 0;
+						for (String asignados : todos) {
+								if (asignados.compareTo(Integer.toString(i)) == 0) {
+									System.out.print("*\t");
+									escrito=1;
+								}
+						}
+						
+						if (escrito == 0)
+							System.out.print(".\t");
+
+					} else {
+						for (String asignados : todos) {
+							if (asignados.compareTo(Integer.toString(i)) == 0) {
+								System.out.print("*\t");
+							} else {
+								System.out.print(".\t");
+							}
+						}
+					}
+					
+					
+				}
+				mostrados++;
+			}
+		}//fin for
+		//mostramos los noni
+		if (!datos_noni.isEmpty()) {
+			
+			System.out.print("|\t");
+			mostrados = 0;
+			for (int i = 0; mostrados < datos_iniciales.size(); i++) {
+				
+				if (datos_iniciales.containsKey(Integer.toString(i))) {
+					if (datos_noni.containsKey(Integer.toString(i))) {
+						
+						String[] todos = implicante.split(",");					
+						if (todos.length > 1) {
+							int escrito = 0;
+							for (String asignados : todos) {
+									if (asignados.compareTo(Integer.toString(i)) == 0) {
+										System.out.print("*\t");
+										escrito=1;
+									}
+							}
+							
+							if (escrito == 0)
+								System.out.print(".\t");
+
+						} else {
+							for (String asignados : todos) {
+								if (asignados.compareTo(Integer.toString(i)) == 0) {
+									System.out.print("*\t");
+								} else {
+									System.out.print(".\t");
+								}
+							}
+						}
+						
+						
+					}
+					mostrados++;
+				}
+			}//fin for
+		}
+		
+		
+	}
+	
+	
+	
+	/*
 	for (String implicante : resultado) {
 
 		System.out.print("\n" + implicante + "\t");
@@ -777,11 +1214,12 @@ public static void mostrarTablaPrimerosImplicantes(HashMap<String, String[]> dat
 		
 			String[] todos = implicante.split(",");
 			if (todos.length > 1) {
+				System.out.println("tamaño1");
 				int escrito = 0;
 				for (String asignados : todos) {
 						if (asignados.compareTo(iniciales.getKey()) == 0) {
-					System.out.print("*\t");
-					escrito=1;
+							System.out.print("*\t");
+							escrito=1;
 						}
 				}
 				
@@ -800,6 +1238,7 @@ public static void mostrarTablaPrimerosImplicantes(HashMap<String, String[]> dat
 
 		}
 	}
+	*/
 	
 	System.out.println("");
 
@@ -824,8 +1263,9 @@ public static void mostrarValores(HashMap<Integer, HashMap<Integer, ArrayList<St
 
 public static void imprimirResultados(String[] terminos, HashMap<String, String[]> datos, ArrayList<String> resultado) {
 	
-	System.out.println("\nRESULTADO");
+	System.out.println("\nRESULTADO MINTERMS");
 	
+	String mejor_minterm = "";
 	System.out.print("f"+Arrays.toString(terminos)+" = ");
 	int primero = 0;
 	for (String mostrar : resultado) {
@@ -846,8 +1286,54 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 		}
 		
 		System.out.print(minter_mostrar);
+		if (mejor_minterm.length() == 0) {
+			mejor_minterm+=minter_mostrar;
+		}else {
+			mejor_minterm+="+"+minter_mostrar;
+		}
 		
 	}
+	
+	System.out.println("\nRESULTADO MAXTERMS");
+	
+	String mejor_maxterm = "";
+	System.out.print("f"+Arrays.toString(terminos)+" = ");
+	primero = 0;
+	for (String mostrar : resultado) {
+		
+		String[] maxterm = datos.get(mostrar);
+		String maxterm_mostrar = "";
+		for (int i = 0; i < maxterm.length; i++) {
+			if (maxterm[i] == "0") {
+				if (maxterm_mostrar.length() == 0) {
+					maxterm_mostrar+=terminos[i].toLowerCase();
+				}else {
+					maxterm_mostrar+=" + "+terminos[i].toLowerCase();
+				}
+				
+			}else if (maxterm[i] == "1") {
+				if (maxterm_mostrar.length() == 0) {
+					maxterm_mostrar+=terminos[i].toUpperCase();
+				} else {
+					maxterm_mostrar+=" + "+terminos[i].toUpperCase();
+				}
+				
+			}
+		}
+		System.out.print("("+maxterm_mostrar+")");
+		mejor_maxterm+="("+maxterm_mostrar+")";
+	}
+	
+	
+	//TODO: Comparar y decir cual es el mejor resultado
+	mejor_maxterm=mejor_maxterm.replaceAll("\\s+", "");
+	mejor_minterm=mejor_minterm.replaceAll("\\s+", "");
+	
+	for (String compare : terminos) {
+		
+	}
+	
+	System.out.println("\n\nMINTERM: "+mejor_minterm +"\nMAXTERM: "+mejor_maxterm);
 }
 
 
