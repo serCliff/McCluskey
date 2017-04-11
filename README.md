@@ -1,6 +1,6 @@
 ## McCluskey
 Resolve algorithm of [Quine McCluskey](https://en.wikipedia.org/wiki/Quine%E2%80%93McCluskey_algorithm). 
-This is useful for simplify your boolean functions, like [Karnaugh tables](https://en.wikipedia.org/wiki/Karnaugh_map), with a better algorithm, which will be for reduce the cost of logical ports of your logical circuit.
+This is useful for simplify your boolean functions, like [Karnaugh tables](https://en.wikipedia.org/wiki/Karnaugh_map), with a better algorithm, which is used to reduce the cost of logical ports of your logical circuit.
 
 # Boolean values
 ```
