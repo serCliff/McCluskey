@@ -12,12 +12,12 @@ a = a
 
 Firstly you select how do you prefer to introuduce the main function.
 
-### MAXTERMS
+### MAXTERMS (option 1)
 Example: 
 ```
 f(A,B,C) = (A + b)(a + B + c)
 ```
-### MINTERMS
+### MINTERMS (option 2)
 Example: 
 ```
 f(A, B, C) = Ab + aBc
