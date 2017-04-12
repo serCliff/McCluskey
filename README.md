@@ -5,7 +5,7 @@ This is useful for simplify your boolean functions, like [Karnaugh tables](https
 # Boolean values
 ```
 a = a
-~a = A
+¬a = A
 ```
 
 # Getting Started
