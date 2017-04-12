@@ -8,13 +8,20 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Map.Entry;
 
+
 import org.w3c.dom.css.ElementCSSInlineStyle;
 
 public class FuncionesComunes {
 	
 	
+	
+	
+	
 	public static String titular() {
 		
+		
+				
+				
 		System.out.println(" __  __           ____ _           _              \n"
 						  +"|  \\/  | ___     / ___| |_   _ ___| | _____ _   _ \n"
 						  +"| |\\/| |/ __|   | |   | | | | / __| |/ / _ \\ | | |\n"
@@ -22,7 +29,7 @@ public class FuncionesComunes {
 						  +"|_|  |_|\\___|    \\____|_|\\__,_|___/_|\\_\\___|\\__, |\n"
 						  +"                                            |___/ ");
 	
-		System.out.print("\nElegir modo de introducción de la función:\n1) MAXTERMS\n2) MINTERMS\n=> ");
+		System.out.print("\nElegir modo de introducción de la función:\n1) MAXTERMS\n2) MINTERMS\n3) SALIR\n=> ");
 
 		String return_value = "";
 		do {
@@ -37,17 +44,21 @@ public class FuncionesComunes {
 				return_value = "1";
 			} else if (return_value.equals("minterms") || return_value.equals("2")) {
 				return_value = "2";
+			}else if (return_value.equals("salir") || return_value.equals("3")) {
+				return_value = "3";
 			} else {
-				System.out.println("Error al introducir el texto, recuerda:\n1) MAXTERMS\n2) MINTERMS\n=> ");
+				System.out.println("Error al introducir el texto, recuerda:\n1) MAXTERMS\n2) MINTERMS\n3) SALIR\n=> ");
 				return_value = "0";
 			}
 						
-		} while (!return_value.equals("1") && !return_value.equals("2"));
+		} while (!return_value.equals("1") && !return_value.equals("2") && !return_value.equals("3"));
 		
 		if (return_value.equals("1")) {
 			System.out.println("\nMAXTERMS");
-		}else {
+		}else if (return_value.equals("2")){
 			System.out.println("\nMINTERMS");
+		}else {
+			System.out.println("\nSALIENDO...");
 		}
 		
 		
@@ -1266,6 +1277,7 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 	System.out.println("\nRESULTADO MINTERMS");
 	
 	String mejor_minterm = "";
+	ArrayList<String> mejor_minterms = new ArrayList<>();
 	System.out.print("f"+Arrays.toString(terminos)+" = ");
 	int primero = 0;
 	for (String mostrar : resultado) {
@@ -1286,6 +1298,7 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 		}
 		
 		System.out.print(minter_mostrar);
+		mejor_minterms.add(minter_mostrar.replaceAll("\\s+", "").replaceAll("\\s+", ""));
 		if (mejor_minterm.length() == 0) {
 			mejor_minterm+=minter_mostrar;
 		}else {
@@ -1297,6 +1310,7 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 	System.out.println("\nRESULTADO MAXTERMS");
 	
 	String mejor_maxterm = "";
+	ArrayList<String> mejor_maxterms = new ArrayList<>();
 	System.out.print("f"+Arrays.toString(terminos)+" = ");
 	primero = 0;
 	for (String mostrar : resultado) {
@@ -1322,6 +1336,7 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 		}
 		System.out.print("("+maxterm_mostrar+")");
 		mejor_maxterm+="("+maxterm_mostrar+")";
+		mejor_maxterms.add(maxterm_mostrar.replaceAll("\\s+", ""));
 	}
 	
 	
@@ -1329,11 +1344,91 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 	mejor_maxterm=mejor_maxterm.replaceAll("\\s+", "");
 	mejor_minterm=mejor_minterm.replaceAll("\\s+", "");
 	
-	for (String compare : terminos) {
+	
+	int negados_min = 0;
+	int num_terms_min= 0;
+	for (String comparacion : mejor_minterms) {
+		String[] characters = comparacion.split("\\^");
 		
+		for (String letra : characters) {
+			if (letra.equals(letra.toUpperCase())) {
+				negados_min++;
+			}
+			num_terms_min++;
+		}
+	}
+	num_terms_min+=mejor_minterms.size();
+	
+	int num_terms_max = 0;
+	int negados_max = 0;
+	for (String comparacion : mejor_maxterms) {
+		String[] characters = comparacion.split("\\^");
+		
+		for (String letra : characters) {
+			if (letra.equals(letra.toUpperCase())) {
+				negados_max++;
+			}
+			num_terms_max++;
+		}
+	}
+	num_terms_max+=mejor_maxterms.size();
+	
+	System.out.println("\n\nMEJOR SOLUCION");
+	
+	
+	if (num_terms_max < num_terms_min) {
+		int diferencia = num_terms_min - num_terms_max;
+		int num_negados = negados_min - negados_max;
+		
+		int resultado_final = diferencia - num_negados;
+		
+		
+		if (resultado_final < 0) {
+			System.out.println("MAXTERMS");
+		} else if (resultado_final > 0) {
+			System.out.println("MINTERMS");
+		} else {
+			System.out.println("PUEDES ESCOGER CUALQUIER SOLUCION");
+		}
+		
+	} else if (num_terms_max > num_terms_min) {
+		int diferencia = num_terms_max - num_terms_min;
+		int num_negados = negados_max - negados_min;
+		
+		int resultado_final = diferencia - num_negados;
+		
+		
+		if (resultado_final < 0) {
+			System.out.println("===> MINTERMS");
+		} else if (resultado_final > 0) {
+			System.out.println("===> MAXTERMS");
+		} else {
+			System.out.println("PUEDES ESCOGER CUALQUIER SOLUCION");
+		}
+		
+	} else {
+		
+		int resultado_final = negados_max - negados_min;
+		
+		
+		if (resultado_final < 0) {
+			System.out.println("===> MAXTERMS");
+		} else if (resultado_final > 0) {
+			System.out.println("===> MINTERMS");
+		} else {
+			System.out.println("PUEDES ESCOGER CUALQUIER SOLUCION");
+		}
 	}
 	
-	System.out.println("\n\nMINTERM: "+mejor_minterm +"\nMAXTERM: "+mejor_maxterm);
+
+	
+	System.out.println("\nPulsa una \"ENTER\" para continuar...");
+	
+	String continuar = new Scanner(System.in).nextLine();
+	System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	
+	
+	
 }
 
 

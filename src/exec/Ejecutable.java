@@ -27,13 +27,17 @@ public class Ejecutable extends Thread{
 		Thread minterms = new Minterms(debug);
 		Thread maxterms = new Maxterms(debug);
 		
-		
-		if (FuncionesComunes.titular().equals("1")) {
-			maxterms.run();
-		} else {
-			minterms.run();
-		}
-		
+		String accion = "";
+		do {
+			
+			accion = FuncionesComunes.titular();
+
+			if (accion.equals("1")) {
+				maxterms.run();
+			} else if (accion.equals("2")) {
+				minterms.run();
+			}
+		} while (!accion.equals("3"));
 		
 		
 	}
