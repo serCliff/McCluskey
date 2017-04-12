@@ -5,7 +5,7 @@ This is useful for simplify your boolean functions, like [Karnaugh tables](https
 # Boolean values
 ```
 a = a
-~a = A
+¬a = A
 ```
 
 # Getting Started
@@ -24,7 +24,7 @@ f(A, B, C) = Ab + aBc
 ```
 
 ## INTRODUCE YOUR 'd' terms
-Before you introuduce your function, you can introduce some 'd' terms which will be used only if they were needed to simplify your logical results.
+After you introuduce your function, you can introduce some 'd' terms which will be used only if they were needed to simplify your logical results.
 
 ## FINALLY
 When execution is finisihed, it returns the solution of apply Quine McCluskey to your function.
