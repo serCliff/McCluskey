@@ -1,5 +1,6 @@
 package Comun;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1336,10 +1337,10 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 	int negados_min = 0;
 	int num_terms_min= 0;
 	for (String comparacion : mejor_minterms) {
-		String[] characters = comparacion.split("\\^");
+		String[] characters = comparacion.split("\\+");
 		
 		for (String letra : characters) {
-			if (letra.equals(letra.toUpperCase())) {
+			if (letra.equals(letra.toLowerCase())) {
 				negados_min++;
 			}
 			num_terms_min++;
@@ -1350,11 +1351,12 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 	int num_terms_max = 0;
 	int negados_max = 0;
 	for (String comparacion : mejor_maxterms) {
-		String[] characters = comparacion.split("\\^");
+		String[] characters = comparacion.split("\\+");
 		
 		for (String letra : characters) {
 			if (letra.equals(letra.toUpperCase())) {
 				negados_max++;
+				
 			}
 			num_terms_max++;
 		}
@@ -1396,6 +1398,7 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 		
 	} else {
 		
+
 		int resultado_final = negados_max - negados_min;
 		
 		if (resultado_final < 0) {
