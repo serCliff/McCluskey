@@ -1082,9 +1082,11 @@ public static ArrayList<String> primerosImplicantes(HashMap<String, String[]> da
 	
 }
 
-public static <T> void mostrarTablaPrimerosImplicantes(HashMap<String, String[]> datos_iniciales,
-		 													HashMap<String, String[]> datos_noni,
-																     ArrayList<String> resultado) {
+public static <T> void mostrarTablaPrimerosImplicantes(String[] terminos,
+								HashMap<String, String[]> datos_binarios,
+							   HashMap<String, String[]> datos_iniciales,
+									HashMap<String, String[]> datos_noni,
+										     ArrayList<String> resultado) {
 
 	System.out.println("\nTABLA PRIMEROS IMPLICANTES");
 
@@ -1099,10 +1101,6 @@ public static <T> void mostrarTablaPrimerosImplicantes(HashMap<String, String[]>
 		System.out.print("\t");
 	}
 
-//	
-//	for (Entry<String, String[]> iniciales : datos_iniciales.entrySet()) {
-//		System.out.print("\t" + iniciales.getKey());
-//	}
 
 	int mostrados = 0;
 	for (int i = 0; mostrados < datos_iniciales.size(); i++) {
@@ -1125,7 +1123,7 @@ public static <T> void mostrarTablaPrimerosImplicantes(HashMap<String, String[]>
 				mostrados++;
 			}
 		}
-		
+		System.out.print("\t => "+Arrays.toString(terminos).toUpperCase());
 		
 	}
 		
@@ -1210,7 +1208,7 @@ public static <T> void mostrarTablaPrimerosImplicantes(HashMap<String, String[]>
 				}
 			}//fin for
 		}
-		
+		System.out.print(" => "+Arrays.toString(datos_binarios.get(implicante)));
 		
 	}
 	
@@ -1276,9 +1274,8 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 	
 	System.out.println("\nRESULTADO MINTERMS");
 	
-	String mejor_minterm = "";
 	ArrayList<String> mejor_minterms = new ArrayList<>();
-	System.out.print("f"+Arrays.toString(terminos)+" = ");
+	System.out.print("f"+Arrays.toString(terminos).toUpperCase()+" = ");
 	int primero = 0;
 	for (String mostrar : resultado) {
 		if (primero == 0) {
@@ -1299,19 +1296,14 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 		
 		System.out.print(minter_mostrar);
 		mejor_minterms.add(minter_mostrar.replaceAll("\\s+", "").replaceAll("\\s+", ""));
-		if (mejor_minterm.length() == 0) {
-			mejor_minterm+=minter_mostrar;
-		}else {
-			mejor_minterm+="+"+minter_mostrar;
-		}
+
 		
 	}
 	
 	System.out.println("\nRESULTADO MAXTERMS");
 	
-	String mejor_maxterm = "";
 	ArrayList<String> mejor_maxterms = new ArrayList<>();
-	System.out.print("f"+Arrays.toString(terminos)+" = ");
+	System.out.print("f"+Arrays.toString(terminos).toUpperCase()+" = ");
 	primero = 0;
 	for (String mostrar : resultado) {
 		
@@ -1335,16 +1327,12 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 			}
 		}
 		System.out.print("("+maxterm_mostrar+")");
-		mejor_maxterm+="("+maxterm_mostrar+")";
 		mejor_maxterms.add(maxterm_mostrar.replaceAll("\\s+", ""));
 	}
 	
 	
-	//TODO: Comparar y decir cual es el mejor resultado
-	mejor_maxterm=mejor_maxterm.replaceAll("\\s+", "");
-	mejor_minterm=mejor_minterm.replaceAll("\\s+", "");
-	
-	
+	//Comparar y decir cual es el mejor resultado
+
 	int negados_min = 0;
 	int num_terms_min= 0;
 	for (String comparacion : mejor_minterms) {
@@ -1409,7 +1397,6 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 	} else {
 		
 		int resultado_final = negados_max - negados_min;
-		
 		
 		if (resultado_final < 0) {
 			System.out.println("===> MAXTERMS");

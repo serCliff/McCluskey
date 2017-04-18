@@ -76,7 +76,7 @@ public class Maxterms extends Thread {
 		resultado = FuncionesComunes.primerosImplicantes(datos_iniciales, datosNONI, utilizados, debug); 
 
 		FuncionesComunes.mostrarValores(valores);
-		FuncionesComunes.mostrarTablaPrimerosImplicantes(datos_iniciales, datosNONI, resultado);
+		FuncionesComunes.mostrarTablaPrimerosImplicantes(terminos, datos, datos_iniciales, datosNONI, resultado);
 		FuncionesComunes.imprimirResultados(terminos, datos, resultado);
 	}
 	
