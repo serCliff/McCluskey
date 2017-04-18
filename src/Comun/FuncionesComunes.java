@@ -1124,10 +1124,10 @@ public static <T> void mostrarTablaPrimerosImplicantes(String[] terminos,
 				mostrados++;
 			}
 		}
-		System.out.print("\t => "+Arrays.toString(terminos).toUpperCase());
+		
 		
 	}
-		
+	System.out.print("\t => "+Arrays.toString(terminos).toUpperCase());
 		
 	
 	
