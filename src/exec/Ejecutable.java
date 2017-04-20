@@ -22,8 +22,6 @@ public class Ejecutable extends Thread{
 		int debug = 1;
 		
 		
-		
-		
 		Thread minterms = new Minterms(debug);
 		Thread maxterms = new Maxterms(debug);
 		

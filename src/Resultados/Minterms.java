@@ -3,6 +3,7 @@ package Resultados;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import Comun.FuncionesComunes;
@@ -38,7 +39,7 @@ public class Minterms extends Thread {
 		
 		terminos = FuncionesComunes.obtenerTerminos(funcion).clone();
 		num_terminos = terminos.length;
-		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinarios(funcion, 0);
+		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinarios(funcion, debug);
 		
 		if (!funcionNoNi.isEmpty()) { //Si hay datosNONI los añado a datos
 			datosNONI = FuncionesComunes.establecerBinariosNONI(funcion, funcionNoNi, 0);
@@ -62,7 +63,7 @@ public class Minterms extends Thread {
 			
 		}
 		
-		datos_iniciales = (HashMap<String, String[]>) datos.clone(); 
+		datos_iniciales = (HashMap<String, String[]>) datos.clone();
 
 		utilizados = (HashMap<String, String[]>) FuncionesComunes.emparejar(datos, valores, num_terminos, debug);
 

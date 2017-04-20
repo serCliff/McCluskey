@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.Map.Entry;
 
@@ -123,6 +125,8 @@ public class FuncionesComunes {
 		String f_minterms = funcion.split("=")[1];
 		String[] minterms = f_minterms.split("\\+");
 		
+		ArrayList<String> valores_correspondientes = new ArrayList<>();
+		
 		
 		for (int i = 0; i < minterms.length; i++) {
 			
@@ -133,16 +137,28 @@ public class FuncionesComunes {
 				if (minterms[i].indexOf(terminos[j]) != -1 ) {
 					valSplited[j] = "1";
 					new_val=new_val+"1";
-				}else{
+				}else if (minterms[i].indexOf(terminos[j].toUpperCase()) != -1 ){
 					valSplited[j] = "0";
 					new_val=new_val+"0";
 				}
+				else{
+					valSplited[j] = "-";
+					new_val=new_val+"-";
+				}
 			}
 			
-			String binario = ""+Integer.parseInt(new_val, 2);
-			resultados.put(binario, valSplited);
+			valores_correspondientes = formatearValores(valSplited);
+			
+			for (String correspondiente : valores_correspondientes) {
+				String binario = ""+Integer.parseInt(correspondiente, 2);
+				
+				resultados.put(binario, correspondiente.split("").clone());
+			}
+			
+			
 			
 		}
+		
 		
 		if (debug == 0) {
 			System.out.println("\nTÉRMINOS UTILIZADOS");
@@ -166,6 +182,47 @@ public class FuncionesComunes {
 		return resultados;
 	}
 	
+	public static ArrayList<String> formatearValores(String[] inicial) {
+		
+		ArrayList<String> finales = new ArrayList<String>();
+		Queue<String[]> cola_finales = new LinkedList<String[]>();
+		
+		cola_finales.add(inicial);
+		
+		int indice = 0;
+		do {
+			String[] ultimo = cola_finales.poll();
+			
+			indice = ultimo.length+1;
+			for (int i = 0; i < ultimo.length; i++) {
+				if (ultimo[i].equals("-")) {
+					indice = i;
+					continue;
+				}
+			}
+			
+			if (indice < ultimo.length+1) {
+				String[] nuevo = ultimo;
+				
+				nuevo[indice] = "0"; 
+				cola_finales.add(nuevo.clone());
+				nuevo[indice] = "1"; 
+				cola_finales.add(nuevo.clone());
+				
+			}else {
+				String nuevo = new String();
+				for (String valor : ultimo) {
+					nuevo+=valor;
+				}
+				
+				finales.add(nuevo);
+			}
+			
+		} while (!cola_finales.isEmpty());
+		
+		
+		return finales;
+	}
 	
 
 	
@@ -431,14 +488,16 @@ public static String pedirTerminosNONImaxterms() {
 				String[] value = entry.getValue();
 
 				int encontrados = 0;
-				for (int j = 0; j < num_terminos; j++)
-					if (value[j] == "1")
+				for (int j = 0; j < num_terminos; j++){
+					if (value[j].equals("1"))
 						encontrados++;
+				}
 
 				if (encontrados == i) {
 					elementos_seccion.add(key);
 				}
 			}
+			
 			// imprimimos los valores de cada seccion
 			if (!elementos_seccion.isEmpty()) {
 
@@ -628,19 +687,19 @@ public static String pedirTerminosNONImaxterms() {
 
 				for (int i = 0; i < elemento_s1.length; i++) {
 
-					if (elemento_s0[i] == "1") {
+					if (elemento_s0[i].equals("1")) {
 						numero_de_unos++;
 					}
 
-					if (elemento_s0[i] == "0" && elemento_s1[i] == "0") {
+					if (elemento_s0[i].equals("0") && elemento_s1[i].equals("0")) {
 						coincidencias--;
-					} else if (elemento_s0[i] == "1" && elemento_s1[i] == "1") {
+					} else if (elemento_s0[i].equals("1") && elemento_s1[i].equals("1")) {
 						coincidencias--;
 
-					} else if (elemento_s0[i] == "-" && elemento_s1[i] == "-") {
+					} else if (elemento_s0[i].equals("-") && elemento_s1[i].equals("-")) {
 						indice_seccion++;
 						coincidencias--;
-					} else if (elemento_s0[i] == "0" && elemento_s1[i] == "1") {
+					} else if (elemento_s0[i].equals("0") && elemento_s1[i].equals("1")) {
 						indice_coincidencia = i;
 					}
 
@@ -1288,9 +1347,9 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 		String[] minterm = datos.get(mostrar);
 		String minter_mostrar = "";
 		for (int i = 0; i < minterm.length; i++) {
-			if (minterm[i] == "0") {
+			if (minterm[i].equals("0")) {
 				minter_mostrar+=terminos[i].toUpperCase();
-			}else if (minterm[i] == "1") {
+			}else if (minterm[i].equals("1")) {
 				minter_mostrar+=terminos[i].toLowerCase();
 			}
 		}
@@ -1311,14 +1370,14 @@ public static void imprimirResultados(String[] terminos, HashMap<String, String[
 		String[] maxterm = datos.get(mostrar);
 		String maxterm_mostrar = "";
 		for (int i = 0; i < maxterm.length; i++) {
-			if (maxterm[i] == "0") {
+			if (maxterm[i].equals("0")) {
 				if (maxterm_mostrar.length() == 0) {
 					maxterm_mostrar+=terminos[i].toLowerCase();
 				}else {
 					maxterm_mostrar+=" + "+terminos[i].toLowerCase();
 				}
 				
-			}else if (maxterm[i] == "1") {
+			}else if (maxterm[i].equals("1")) {
 				if (maxterm_mostrar.length() == 0) {
 					maxterm_mostrar+=terminos[i].toUpperCase();
 				} else {
