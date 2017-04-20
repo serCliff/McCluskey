@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.IllegalFormatCodePointException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -32,7 +33,7 @@ public class FuncionesComunes {
 						  +"|_|  |_|\\___|    \\____|_|\\__,_|___/_|\\_\\___|\\__, |\n"
 						  +"                                            |___/ ");
 	
-		System.out.print("\nElegir modo de introducción de la función:\n1) MAXTERMS\n2) MINTERMS\n3) SALIR\n=> ");
+		System.out.print("\nElegir modo de introducción de la función:\n\n\t1) MAXTERMS\n\t2) MINTERMS\n\n\t3) SALIR\n=> ");
 
 		String return_value = "";
 		do {
@@ -50,7 +51,7 @@ public class FuncionesComunes {
 			}else if (return_value.equals("salir") || return_value.equals("3")) {
 				return_value = "3";
 			} else {
-				System.out.println("Error al introducir el texto, recuerda:\n1) MAXTERMS\n2) MINTERMS\n3) SALIR\n=> ");
+				System.out.println("Error al introducir el texto, recuerda:\n\n\t1) MAXTERMS\n\t2) MINTERMS\n\n\t3) SALIR\n=> ");
 				return_value = "0";
 			}
 						
@@ -280,6 +281,63 @@ public class FuncionesComunes {
 		return resultados;
 	}
 	
+	
+	
+	
+	
+	
+	public static HashMap<String, String[]> terminosOpuestos(HashMap<String, String[]> datos, String[] terminos, int debug) {
+		HashMap<String, String[]> datos_opuestos = new HashMap<>();
+		
+		 
+		for (int i = 0; i < Math.pow(2,terminos.length); i++) {
+			
+			if (!datos.containsKey(Integer.toString(i))) {
+				String[] binarios = new String[terminos.length];
+				int index = terminos.length-1;
+				
+				for (int j = 0; j < binarios.length; j++) {
+					binarios[j] = "0";
+				}
+				for (String value : convert(i,2).split("")) {
+					binarios[index] = value;
+					index--;
+				}
+				datos_opuestos.put(Integer.toString(i), binarios);
+			}
+		}
+		
+		if (debug == 0) {
+			System.out.println("OPUESTOS");
+			for (Entry<String, String[]> val : datos_opuestos.entrySet()) {
+				System.out.println(val.getKey() + " - " + Arrays.toString(val.getValue()));
+			}
+		}
+		
+		
+//		String enter = new Scanner(System.in).nextLine();
+		
+		return datos_opuestos;
+	}
+	
+	
+	
+	public static String convert(int decimal , int base)
+    {
+        int result = 0;
+        int multiplier = 1;
+
+          while(decimal > 0)
+            {
+              int residue = decimal % base;
+              decimal     = decimal / base;
+              result      = result + residue * multiplier;
+              multiplier  = multiplier * 10;
+            }
+
+//            System.out.println ("binary....." + result);
+            return ""+result;
+    }
 	
 	
 public static String pedirTerminosNONI() {

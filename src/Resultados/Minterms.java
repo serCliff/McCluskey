@@ -6,11 +6,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
+import javax.management.remote.TargetedNotification;
+import javax.swing.text.html.HTMLDocument.HTMLReader.ParagraphAction;
+
 import Comun.FuncionesComunes;
 
 public class Minterms extends Thread {
 
 	private static HashMap<String, String[]> datos;
+	private static HashMap<String, String[]> datosMaxterms;
 	private static HashMap<String, String[]> datosNONI;
 	private static HashMap<Integer, HashMap<Integer, ArrayList<String>>> valores;
 	private static HashMap<String, String[]> utilizados;
@@ -39,7 +44,8 @@ public class Minterms extends Thread {
 		
 		terminos = FuncionesComunes.obtenerTerminos(funcion).clone();
 		num_terminos = terminos.length;
-		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinarios(funcion, debug);
+		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinarios(funcion, 0);
+		datosMaxterms = FuncionesComunes.terminosOpuestos(datos, terminos,debug);
 		
 		if (!funcionNoNi.isEmpty()) { //Si hay datosNONI los añado a datos
 			datosNONI = FuncionesComunes.establecerBinariosNONI(funcion, funcionNoNi, 0);
@@ -65,6 +71,7 @@ public class Minterms extends Thread {
 		
 		datos_iniciales = (HashMap<String, String[]>) datos.clone();
 
+//		TODO: realizar esto para macterms tb
 		utilizados = (HashMap<String, String[]>) FuncionesComunes.emparejar(datos, valores, num_terminos, debug);
 
 		utilizados = FuncionesComunes.eliminarDuplicados(utilizados, debug);
