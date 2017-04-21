@@ -1,6 +1,7 @@
 package exec;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 import Comun.FuncionesComunes;
 import Resultados.Maxterms;
@@ -35,6 +36,8 @@ public class Ejecutable extends Thread{
 			} else if (accion.equals("2")) {
 				minterms.run();
 			}
+			
+			
 		} while (!accion.equals("3"));
 		
 		
