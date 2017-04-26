@@ -46,11 +46,11 @@ public class Minterms extends Thread {
 		terminos = FuncionesComunes.obtenerTerminos(funcion).clone();
 		num_terminos = terminos.length;
 
-		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinarios(funcion, 0);
-		datosMaxterms = FuncionesComunes.terminosOpuestos(datos, terminos,0);
+		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinarios(funcion, debug);
+		datosMaxterms = FuncionesComunes.terminosOpuestos(datos, terminos,debug);
 		
 		if (!funcionNoNi.isEmpty()) { //Si hay datosNONI los añado a datos
-			datosNONI = FuncionesComunes.establecerBinariosNONI(funcion, funcionNoNi, 0);
+			datosNONI = FuncionesComunes.establecerBinariosNONI(funcion, funcionNoNi, debug);
 			
 			for (Entry<String, String[]> quitar_de_noni : datos.entrySet()) { //Evitamos confundir noni iguales que los normales
 				if (datosNONI.containsKey(quitar_de_noni.getKey())) {
@@ -90,7 +90,7 @@ public class Minterms extends Thread {
 		
 		
 		
-//		MAXTERMS1
+//		MAXTERMS
 		datos_iniciales = (HashMap<String, String[]>) datosMaxterms.clone();
 
 		utilizados = (HashMap<String, String[]>) FuncionesComunes.emparejar(datosMaxterms, valores, num_terminos, debug);

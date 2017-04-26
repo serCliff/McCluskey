@@ -42,11 +42,11 @@ public class Maxterms extends Thread {
 		terminos = FuncionesComunes.obtenerTerminos(funcion).clone(); //devuelve el numero de términos que tiene ej: F(A,B,C) => terminos[] = [A, B, C]
 		num_terminos = terminos.length;
 
-		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinariosMaxterms(funcion, 0);
-		datosMinterms = FuncionesComunes.terminosOpuestos(datos, terminos,0);
+		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinariosMaxterms(funcion, debug);
+		datosMinterms = FuncionesComunes.terminosOpuestos(datos, terminos,debug);
 		
 		if (!funcionNoNi.isEmpty()) { //Si hay datosNONI los añado a datos
-			datosNONI = FuncionesComunes.establecerBinariosNONImaxterms(funcion, funcionNoNi, 0);
+			datosNONI = FuncionesComunes.establecerBinariosNONImaxterms(funcion, funcionNoNi, debug);
 			
 			for (Entry<String, String[]> quitar_de_noni : datos.entrySet()) { //Evitamos confundir noni iguales que los normales
 				if (datosNONI.containsKey(quitar_de_noni.getKey())) {
