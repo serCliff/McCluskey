@@ -46,8 +46,7 @@ public class Maxterms extends Thread {
 		datosMinterms = FuncionesComunes.terminosOpuestos(datos, terminos,0);
 		
 		if (!funcionNoNi.isEmpty()) { //Si hay datosNONI los añado a datos
-			datosNONI = FuncionesComunes.establecerBinariosNONImaxterms
-					(funcion, funcionNoNi, 0);
+			datosNONI = FuncionesComunes.establecerBinariosNONImaxterms(funcion, funcionNoNi, 0);
 			
 			for (Entry<String, String[]> quitar_de_noni : datos.entrySet()) { //Evitamos confundir noni iguales que los normales
 				if (datosNONI.containsKey(quitar_de_noni.getKey())) {

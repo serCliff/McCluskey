@@ -188,11 +188,13 @@ public class FuncionesComunes {
 		}
 		if (debug == 2) {
 			System.out.println("\nTÉRMINOS NONI");
-			for(Entry<String, String[]> entry : resultados.entrySet()) {
-			    String key = entry.getKey();
-			    String[] value = entry.getValue();
-
-			    System.out.println("Valor: "+key+"\t=>\t"+Arrays.toString(value));
+			
+			int total = (int) Math.pow(2, terminos.length);
+			
+			for (int i = 0; i < total; i++) {
+				if (resultados.containsKey(Integer.toString(i))) {
+					 System.out.println("Valor: "+i+"\t=>\t"+Arrays.toString(resultados.get(Integer.toString(i))));
+				}
 			}
 		}
 		
@@ -298,11 +300,12 @@ public class FuncionesComunes {
 		}
 		if (debug == 2) {
 			System.out.println("\nTÉRMINOS NONI");
-			for(Entry<String, String[]> entry : resultados.entrySet()) {
-			    String key = entry.getKey();
-			    String[] value = entry.getValue();
-
-			    System.out.println("Valor: "+key+"\t=>\t"+Arrays.toString(value));
+			int total = (int) Math.pow(2, terminos.length);
+			
+			for (int i = 0; i < total; i++) {
+				if (resultados.containsKey(Integer.toString(i))) {
+					 System.out.println("Valor: "+i+"\t=>\t"+Arrays.toString(resultados.get(Integer.toString(i))));
+				}
 			}
 		}
 		
