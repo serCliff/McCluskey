@@ -45,6 +45,7 @@ public class Minterms extends Thread {
 		
 		terminos = FuncionesComunes.obtenerTerminos(funcion).clone();
 		num_terminos = terminos.length;
+
 		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinarios(funcion, 0);
 		datosMaxterms = FuncionesComunes.terminosOpuestos(datos, terminos,0);
 		
@@ -76,10 +77,9 @@ public class Minterms extends Thread {
 		datos_iniciales = (HashMap<String, String[]>) datos.clone();
 		
 		utilizados = (HashMap<String, String[]>) FuncionesComunes.emparejar(datos, valores, num_terminos, debug);
-
 		utilizados = FuncionesComunes.eliminarDuplicados(utilizados, debug);
-
 		resultado = FuncionesComunes.primerosImplicantes(datos_iniciales, datosNONI, utilizados, debug); 
+
 		if (debug == 0) {
 			System.out.println("\nTERMINOS MINTERMS\n");
 			FuncionesComunes.mostrarValores(valores);
@@ -90,12 +90,11 @@ public class Minterms extends Thread {
 		
 		
 		
-//		TODO: realizar esto para maxterms tb
+//		MAXTERMS1
 		datos_iniciales = (HashMap<String, String[]>) datosMaxterms.clone();
+
 		utilizados = (HashMap<String, String[]>) FuncionesComunes.emparejar(datosMaxterms, valores, num_terminos, debug);
-
 		utilizados = FuncionesComunes.eliminarDuplicados(utilizados, debug);
-
 		resultado = FuncionesComunes.primerosImplicantes(datos_iniciales, datosNONI, utilizados, debug); 
 
 		if (debug == 0) {

@@ -10,6 +10,7 @@ public class Maxterms extends Thread {
 
 
 	private static HashMap<String, String[]> datos;
+	private static HashMap<String, String[]> datosMinterms;
 	private static HashMap<String, String[]> datosNONI;
 	private static HashMap<Integer, HashMap<Integer, ArrayList<String>>> valores;
 	private static HashMap<String, String[]> utilizados;
@@ -32,7 +33,6 @@ public class Maxterms extends Thread {
 		String[] terminos;
 		String[] terminosNONI;
 		
-//		FuncionesComunes.titular();
 		System.out.println("\n");
 		
 		
@@ -43,6 +43,7 @@ public class Maxterms extends Thread {
 		num_terminos = terminos.length;
 
 		datos = (HashMap<String, String[]>) FuncionesComunes.establecerBinariosMaxterms(funcion, 0);
+		datosMinterms = FuncionesComunes.terminosOpuestos(datos, terminos,0);
 		
 		if (!funcionNoNi.isEmpty()) { //Si hay datosNONI los añado a datos
 			datosNONI = FuncionesComunes.establecerBinariosNONImaxterms
@@ -67,17 +68,43 @@ public class Maxterms extends Thread {
 			
 		}
 		
+		boolean minterms = false;
+
 		datos_iniciales = (HashMap<String, String[]>) datos.clone(); 
 
 		utilizados = (HashMap<String, String[]>) FuncionesComunes.emparejar(datos, valores, num_terminos, debug);
-
 		utilizados = FuncionesComunes.eliminarDuplicados(utilizados, debug);
-
 		resultado = FuncionesComunes.primerosImplicantes(datos_iniciales, datosNONI, utilizados, debug); 
 
-		FuncionesComunes.mostrarValores(valores);
+		if (debug == 0) {
+			System.out.println("\nTERMINOS MAXTERMS\n");
+			FuncionesComunes.mostrarValores(valores);
+		}
+
 		FuncionesComunes.mostrarTablaPrimerosImplicantes(terminos, datos, datos_iniciales, datosNONI, resultado);
-		FuncionesComunes.imprimirResultados(terminos, datos, resultado);
+		String resultado_max = FuncionesComunes.imprimirResultados(terminos, datos, resultado, minterms);
+
+
+//		MINTERMS
+		datos_iniciales = (HashMap<String, String[]>) datosMinterms.clone();
+
+		utilizados = (HashMap<String, String[]>) FuncionesComunes.emparejar(datosMinterms, valores, num_terminos, debug);
+		utilizados = FuncionesComunes.eliminarDuplicados(utilizados, debug);
+		resultado = FuncionesComunes.primerosImplicantes(datos_iniciales, datosNONI, utilizados, debug); 
+
+		if (debug == 0) {
+			System.out.println("\nTERMINOS MAXTERMS\n");
+			FuncionesComunes.mostrarValores(valores);
+		}
+		
+		FuncionesComunes.mostrarTablaPrimerosImplicantes(terminos, datosMinterms, datos_iniciales, datosNONI, resultado);
+		
+		minterms = true;
+		String resultado_min = FuncionesComunes.imprimirResultados(terminos, datosMinterms, resultado,minterms);
+
+
+		FuncionesComunes.comparacionMinMax(terminos, resultado_min, resultado_max);
+
 	}
 	
 	

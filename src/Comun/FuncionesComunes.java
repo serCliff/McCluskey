@@ -57,27 +57,27 @@ public class FuncionesComunes {
 						
 		} while (!return_value.equals("1") && !return_value.equals("2") && !return_value.equals("3"));
 		
-//		if (return_value.equals("1")) {
-//			System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-//			System.out.println(" __  __    _    __  _______ _____ ____  __  __ ____  \n"+
-//					"|  \\/  |  / \\   \\ \\/ /_   _| ____|  _ \\|  \\/  / ___| \n"+
-//					"| |\\/| | / _ \\   \\  /  | | |  _| | |_) | |\\/| \\___ \\ \n"+
-//					"| |  | |/ ___ \\  /  \\  | | | |___|  _ <| |  | |___) |\n"+
-//					"|_|  |_/_/   \\_\\/_/\\_\\ |_| |_____|_| \\_\\_|  |_|____/ \n"+
-//					"");
-//			System.out.println("\n\n\n\n\n\n");
-//		}else if (return_value.equals("2")){
-//			System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-//			System.out.println(" __  __ ___ _   _ _____ _____ ____  __  __ ____  \n"+
-//					"|  \\/  |_ _| \\ | |_   _| ____|  _ \\|  \\/  / ___| \n"+
-//					"| |\\/| || ||  \\| | | | |  _| | |_) | |\\/| \\___ \\ \n"+
-//					"| |  | || || |\\  | | | | |___|  _ <| |  | |___) |\n"+
-//					"|_|  |_|___|_| \\_| |_| |_____|_| \\_\\_|  |_|____/ \n"+
-//					"                                                 ");
-//			System.out.println("\n\n\n\n\n\n");
-//		}else {
-//			System.out.println("\nSALIENDO...");
-//		}
+		if (return_value.equals("1")) {
+			System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			System.out.println(" __  __    _    __  _______ _____ ____  __  __ ____  \n"+
+					"|  \\/  |  / \\   \\ \\/ /_   _| ____|  _ \\|  \\/  / ___| \n"+
+					"| |\\/| | / _ \\   \\  /  | | |  _| | |_) | |\\/| \\___ \\ \n"+
+					"| |  | |/ ___ \\  /  \\  | | | |___|  _ <| |  | |___) |\n"+
+					"|_|  |_/_/   \\_\\/_/\\_\\ |_| |_____|_| \\_\\_|  |_|____/ \n"+
+					"");
+			System.out.println("\n\n\n\n\n\n");
+		}else if (return_value.equals("2")){
+			System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			System.out.println(" __  __ ___ _   _ _____ _____ ____  __  __ ____  \n"+
+					"|  \\/  |_ _| \\ | |_   _| ____|  _ \\|  \\/  / ___| \n"+
+					"| |\\/| || ||  \\| | | | |  _| | |_) | |\\/| \\___ \\ \n"+
+					"| |  | || || |\\  | | | | |___|  _ <| |  | |___) |\n"+
+					"|_|  |_|___|_| \\_| |_| |_____|_| \\_\\_|  |_|____/ \n"+
+					"                                                 ");
+			System.out.println("\n\n\n\n\n\n");
+		}else {
+			System.out.println("\nSALIENDO...");
+		}
 		
 		
 		return return_value;
@@ -253,6 +253,8 @@ public class FuncionesComunes {
 		f_minterms = f_minterms.replaceAll("\\(", "");
 		f_minterms = f_minterms.replaceAll("\\+", "");
 		String[] minterms = f_minterms.split("\\)");
+		
+		ArrayList<String> valores_correspondientes = new ArrayList<>();
 				
 		
 		for (int i = 0; i < minterms.length; i++) {
@@ -264,25 +266,35 @@ public class FuncionesComunes {
 				if (minterms[i].indexOf(terminos[j]) != -1 ) {
 					valSplited[j] = "0";
 					new_val=new_val+"0";
-				}else{
+				} else if (minterms[i].indexOf(terminos[j].toUpperCase()) != -1 ){
 					valSplited[j] = "1";
 					new_val=new_val+"1";
+				} else{
+					valSplited[j] = "-";
+					new_val=new_val+"-";
 				}
 			}
 			
-			String binario = ""+Integer.parseInt(new_val, 2);
-			resultados.put(binario, valSplited);
+			valores_correspondientes = formatearValores(valSplited);
+			
+			for (String correspondiente : valores_correspondientes) {
+				String binario = ""+Integer.parseInt(correspondiente, 2);
+				
+				resultados.put(binario, correspondiente.split("").clone());
+			}
 			
 		}
 		
 		if (debug == 0) {
 			System.out.println("\nTÉRMINOS UTILIZADOS");
-			for(Entry<String, String[]> entry : resultados.entrySet()) {
-			    String key = entry.getKey();
-			    String[] value = entry.getValue();
-
-			    System.out.println("Valor: "+key+"\t=>\t"+Arrays.toString(value));
+			int total = (int) Math.pow(2, terminos.length);
+			
+			for (int i = 0; i < total; i++) {
+				if (resultados.containsKey(Integer.toString(i))) {
+					 System.out.println("Valor: "+i+"\t=>\t"+Arrays.toString(resultados.get(Integer.toString(i))));
+				}
 			}
+
 		}
 		if (debug == 2) {
 			System.out.println("\nTÉRMINOS NONI");
